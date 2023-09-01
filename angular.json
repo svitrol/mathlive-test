@@ -22,7 +22,17 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/mathlive/dist/fonts",
+                "output": "/assets/mathlive/fonts"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/mathlive/dist/sounds",
+                "output": "/assets/mathlive/sounds"
+              }
             ],
             "styles": [
               "src/styles.css"
@@ -84,7 +94,17 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/mathlive/dist/fonts",
+                "output": "/assets/mathlive/fonts"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/mathlive/dist/sounds",
+                "output": "/assets/mathlive/sounds"
+              }
             ],
             "styles": [
               "src/styles.css"
@@ -94,5 +114,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "9f1184f9-0ceb-4fc6-abce-6b6a5be40985"
   }
 }
