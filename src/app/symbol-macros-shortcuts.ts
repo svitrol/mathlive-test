@@ -10,24 +10,26 @@ function createInlineSymbolShortcut(name: string) {
 
 function createInlineFunctionShortcut(functionName: string) {
     const name = normalizeName(functionName);
-    return {[name]: '\\' + name + '{#@}{#?}'};
+    return {[name]: '\\' + name + '{#?}'};
 }
 
 function createFunctionMacro(functionName: string, paramCount: number) {
     const name = normalizeName(functionName);
-    const symName = 'sym' + name;
-    let latexString = '\\' + symName + '\\left(';
+    const symName = 'funchelpsym' + name;
+    // function help symbol -> just some long help constant that user probably won't use so I can remove it without thought
+    let latexString = '\\' + symName + '\\leftbrace\\left(';
     for (let i = 0; i < paramCount; i++) {
-        latexString += ' {#' + (i + 1) + '}';
+        latexString += '{#' + (i + 1) + '}'; // max number of arguments is 9
         if (i < paramCount - 1) {
-            latexString += ',';
+            latexString += '\\coolseparotor';
         }
     }
-    latexString += '\\right)';
+    latexString += '\\rightbrace\\right)';
     return {
         [symName]: { // just define symbol separately so that it acts as one
             args: 0,
             def: functionName,
+            expand: false,
         },
         [name]: {
             captureSelection: false,
@@ -77,6 +79,39 @@ export function addShortcutForSymbol(mfe: MathfieldElement, symbolName: string) 
 
 export function addCustomMacrosAndShortcuts(mfe: MathfieldElement, customFunctions: Map<string,
     CustomFunction>, customSymbols: Map<string, CustomSymbol>) {
+    mfe.macros = {
+        ...mfe.macros,
+        ...{
+            'coolseparotor': {
+                args: 0,
+                def: ',',
+                captureSelection: false,
+                expand: false,
+            }
+        },
+    };
+    mfe.macros = {
+        ...mfe.macros,
+        ...{
+            'leftbrace': {
+                args: 0,
+                def: '',
+                captureSelection: false,
+                expand: false,
+            }
+        },
+    };
+    mfe.macros = {
+        ...mfe.macros,
+        ...{
+            'rightbrace': {
+                args: 0,
+                def: '',
+                captureSelection: false,
+                expand: false,
+            }
+        },
+    };
     customFunctions.forEach((val, key) => {
         addMacroForFunction(mfe, key, val.numberOfParameters);
         addShortcutForFunction(mfe, key);
@@ -85,6 +120,13 @@ export function addCustomMacrosAndShortcuts(mfe: MathfieldElement, customFunctio
         addMacroForSymbol(mfe, key);
         addShortcutForSymbol(mfe, key);
     });
+}
 
-    console.log(mfe.macros);
+export function removeHelpSymbols(latex: string): string {
+    let resultLatex = latex;
+    resultLatex = resultLatex.replaceAll('\\rightbrace\\right)', '');
+    resultLatex = resultLatex.replaceAll('\\leftbrace\\left(', '');
+    resultLatex = resultLatex.replaceAll('\\coolseparotor', '');
+    resultLatex = resultLatex.replaceAll('funchelpsym', '');
+    return resultLatex;
 }
