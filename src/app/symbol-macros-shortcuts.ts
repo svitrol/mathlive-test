@@ -35,6 +35,7 @@ function createFunctionMacro(functionName: string, paramCount: number) {
             captureSelection: false,
             args: paramCount,
             def: latexString,
+            expand: true,
         }
     };
 }
