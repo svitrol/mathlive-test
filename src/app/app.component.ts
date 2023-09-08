@@ -35,6 +35,7 @@ export class AppComponent {
         MathfieldElement.soundsDirectory = 'assets/mathlive/sounds';
         MathfieldElement.fontsDirectory = 'assets/mathlive/fonts';
         const targetElement = document.getElementById('mycontainer');
+        const formulaElement  = document.getElementById("formula-content");
         targetElement?.appendChild(this.mfe);
         this.mfe.style.setProperty('width', 'inherit');
 
@@ -52,8 +53,12 @@ export class AppComponent {
 
         this.mfe.addEventListener('input', (ev: any) => {
             console.log(ev.target.value);
-            console.log(removeHelpSymbols(ev.target.getValue('latex-expanded')));
-            console.log(ev.target.getValue('latex-expanded'));
+            const expanded = this.mfe.getValue('latex-expanded');
+            console.log(removeHelpSymbols(expanded));
+            console.log(expanded);
+            if(formulaElement != null){
+                formulaElement.innerHTML = expanded;
+            }
             // console.log(ev.target.innerText);
         });
     }
